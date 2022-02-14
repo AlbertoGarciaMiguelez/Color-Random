@@ -49,5 +49,14 @@ namespace HelloWorld
                 player.Move();
             }
         }
+        static void Change()
+        {
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Color" : "Request color Change"))
+            {
+                var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+                var player = playerObject.GetComponent<HelloWorldPlayer>();
+                player.Change();
+            }
+        }
     }
 }
