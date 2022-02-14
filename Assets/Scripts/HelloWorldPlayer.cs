@@ -18,6 +18,7 @@ namespace HelloWorld
         {
              if (IsOwner)
             {
+                Change();
                 Move();
             }
         }
@@ -36,8 +37,12 @@ namespace HelloWorld
             }
         }
 
+        public void Change(){
+
+        }
+        
         public void Nuevo(){
-            color.Value = GetComponent<Renderer>().material.color = GetRandomColor;
+            color.Value = GetComponent<Renderer>().material.color = GetRandomColor();
         }
 
         public Color GetRandomColor(){

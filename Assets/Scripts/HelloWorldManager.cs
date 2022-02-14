@@ -49,7 +49,7 @@ namespace HelloWorld
                 player.Move();
             }
         }
-        static void Change()
+        static void ChangueNewColor()
         {
             if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Color" : "Request color Change"))
             {
