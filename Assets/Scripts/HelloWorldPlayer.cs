@@ -11,6 +11,9 @@ namespace HelloWorld
         
         public NetworkVariable<Color> color = new NetworkVariable<Color>();
 
+        private int i;
+        private int x;
+
         public override void OnNetworkSpawn()
         {
              if (IsOwner)
@@ -33,7 +36,15 @@ namespace HelloWorld
             }
         }
 
-        public void Nuevo(){
+        public Color GetRandomColor(){
+            
+            do{
+                i = Random.Range(0, colours.Length);
+            }while(i==x);
+
+            x=i;
+
+            return colours[i];
             
         }
 
