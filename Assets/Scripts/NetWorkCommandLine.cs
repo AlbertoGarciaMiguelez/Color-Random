@@ -31,7 +31,6 @@ public class NetworkCommandLine : MonoBehaviour
            }
        }
    }
-     
 
    private Dictionary<string, string> GetCommandlineArgs()
    {

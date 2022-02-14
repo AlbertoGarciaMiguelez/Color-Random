@@ -18,7 +18,7 @@ public class CambiarColor : MonoBehaviour
 
 
         int i = Random.Range(0, colours.Length);
-        cubos[0].GetComponent<Renderer>().material.color = colours[i]; ;
+        cubos[0].GetComponent<Renderer>().material.color = colours[i];
 
         /*_render= GetComponent<Renderer>();
         materialCount = _render.material.Length;
@@ -33,10 +33,13 @@ public class CambiarColor : MonoBehaviour
     }
     public void Nuevo(int i){
         int x = Random.Range(0, colours.Length);
-        while(x =! i){
-            int x = Random.Range(0, colours.Length);
+        while(x == i){
+             x = Random.Range(0, colours.Length);
         }
-            return x;
+        while(x == i){
+             x = Random.Range(0, colours.Length);
+        }
+            cubos[0].GetComponent<Renderer>().material.color = colours[x];
         }
     }
     /*void RandomColor(){
@@ -45,4 +48,3 @@ public class CambiarColor : MonoBehaviour
     Color color = new Color(Random.Range(0, 1), Random.Range(0, 1), Random.Range(0, 1), 1);
     GameObject boxInit = Instantiate(box, transform.position, Quaternion.identity);
     boxInit.GetComponent<Renderer>().material.color = color;*/
-}
