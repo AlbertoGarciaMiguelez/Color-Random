@@ -5,7 +5,7 @@ namespace HelloWorld
 {
     public class HelloWorldPlayer : NetworkBehaviour
     {
-        Color[] colours = {Color.red, Color.blue, Color.green, Color.black};
+        Color[] colours = {Color.red, Color.blue, Color.green, Color.black, Color.green, Color.yellow, Color.grey, Color.cyan, Color.magenta, Color.gray};
 
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
         
@@ -16,8 +16,6 @@ namespace HelloWorld
              if (IsOwner)
             {
                 Move();
-                int i = Random.Range(0, colours.Length);
-                color.GetComponent<Renderer>().material.color = colours[i];
             }
         }
 
@@ -36,13 +34,18 @@ namespace HelloWorld
         }
 
         public void Nuevo(){
-            int x = Random.Range(0, colours.Length);
+            
         }
 
         [ServerRpc]
         void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
         {
             Position.Value = GetRandomPositionOnPlane();
+        }
+        [ServerRpc]
+        void SubmitColorRequestServerRpc(ServerRpcParams rpcParams = default)
+        {
+            color.Value = GetRandomColor();
         }
     
         static Vector3 GetRandomPositionOnPlane()
