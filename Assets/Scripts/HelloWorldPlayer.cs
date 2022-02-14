@@ -39,9 +39,18 @@ namespace HelloWorld
 
         public void Change(){
 
+            if (NetworkManager.Singleton.IsServer)
+            {
+                NuevoColor();
+            }
+            else
+            {
+                SubmitColorRequestServerRpc();
+            }
+
         }
-        
-        public void Nuevo(){
+
+        public void NuevoColor(){
             color.Value = GetComponent<Renderer>().material.color = GetRandomColor();
         }
 
