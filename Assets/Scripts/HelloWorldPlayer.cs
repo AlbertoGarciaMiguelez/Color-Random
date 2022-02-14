@@ -36,8 +36,12 @@ namespace HelloWorld
             }
         }
 
+        public void Nuevo(){
+            color.Value = GetComponent<Renderer>().material.color = GetRandomColor;
+        }
+
         public Color GetRandomColor(){
-            
+
             do{
                 i = Random.Range(0, colours.Length);
             }while(i==x);
