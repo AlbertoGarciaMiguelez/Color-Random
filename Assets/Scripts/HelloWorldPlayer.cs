@@ -11,6 +11,8 @@ namespace HelloWorld
         
         public NetworkVariable<Color> color = new NetworkVariable<Color>();
 
+        private Renderer enlace;
+
         private int i;
         private int x;
 
@@ -86,6 +88,8 @@ namespace HelloWorld
         void Update()
         {
             transform.position = Position.Value;
+            enlace = GetComponent<Renderer>();
+            enlace.material.color = color.Value;
         }
     }
 }
