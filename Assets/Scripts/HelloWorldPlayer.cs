@@ -1,71 +1,68 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 
 namespace HelloWorld
 {
     public class HelloWorldPlayer : NetworkBehaviour
     {
-        Color[] colours = {Color.red, Color.blue, Color.green, Color.black, Color.green, Color.yellow, Color.grey, Color.cyan, Color.magenta, Color.gray};
 
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
         
-        public NetworkVariable<Color> color = new NetworkVariable<Color>();
+        public NetworkVariable<Color> colorPlayer = new NetworkVariable<Color>();
+
+        public static List<Color> coloresGuardados= new List<Color>();
 
         private Renderer enlace;
+        
 
-        private int i;
+
         private int x;
+
+        public void Start(){
+            
+            Position.OnValueChanged += OnPositionChange;
+            colorPlayer.OnValueChanged += OnColorChange;
+            enlace= GetComponent<Renderer>();
+            if(IsServer && IsOwner){
+                coloresGuardados.Add(Color.cyan);
+                coloresGuardados.Add(Color.clear);
+                coloresGuardados.Add(Color.blue);
+                coloresGuardados.Add(Color.gray);
+                coloresGuardados.Add(Color.green); 
+                coloresGuardados.Add(Color.magenta);
+                coloresGuardados.Add(Color.red);
+                coloresGuardados.Add(Color.yellow);
+                
+            }
+            if(IsOwner){
+                SubmitColorRequestServerRpc(true);
+            }
+            
+        }
+        public void OnPositionChange(Vector3 previousValue, Vector3 newValue){
+            transform.position=Position.Value;
+        }
+        public void OnColorChange(Color previousValue, Color newValue){
+            enlace.material.color = newValue;
+        }
 
         public override void OnNetworkSpawn()
         {
-             if (IsOwner)
+            // IsOwner es el objeto(player) q controla la maquina
+            if (IsOwner)
             {
-                Change();
-                Move();
+                MovePlayer();
             }
         }
-
-        public void Move()
+        public void MovePlayer()
         {
-            if (NetworkManager.Singleton.IsServer)
-            {
-                var randomPosition = GetRandomPositionOnPlane();
-                transform.position = randomPosition;
-                Position.Value = randomPosition;
-            }
-            else
-            {
                 SubmitPositionRequestServerRpc();
-            }
         }
-
-        public void Change(){
-
-            if (NetworkManager.Singleton.IsServer)
-            {
-                NuevoColor();
-            }
-            else
-            {
-                SubmitColorRequestServerRpc();
-            }
-
-        }
-
-        public void NuevoColor(){
-            color.Value = GetComponent<Renderer>().material.color = GetRandomColor();
-        }
-
-        public Color GetRandomColor(){
-
-            do{
-                i = Random.Range(0, colours.Length);
-            }while(i==x);
-
-            x=i;
-
-            return colours[i];
-            
+        public void ChangeColor(){
+                SubmitColorRequestServerRpc(false);
         }
 
         [ServerRpc]
@@ -73,23 +70,42 @@ namespace HelloWorld
         {
             Position.Value = GetRandomPositionOnPlane();
         }
-        [ServerRpc]
-        void SubmitColorRequestServerRpc(ServerRpcParams rpcParams = default)
-        {
-            color.Value = GetRandomColor();
-        }
-    
         static Vector3 GetRandomPositionOnPlane()
         {
             return new Vector3(Random.Range(-3f, 3f), 1f, Random.Range(-3f, 3f));
         }
 
-
-        void Update()
+        [ServerRpc]
+        void SubmitColorRequestServerRpc(bool primeravez = false, ServerRpcParams rpcParams = default)
         {
-            transform.position = Position.Value;
-            enlace = GetComponent<Renderer>();
-            enlace.material.color = color.Value;
+            /*
+            Color oldColor= colorPlayer.Vlue
+            Color newColor =availableColors[Random.Rqange(0,availableCOlors.Count)];
+            avilableColors.R    emove(newColor);
+            availableColors.Add(oldColor);
+            colorPlayer.Value=newColor;
+            
+            */
+            
+            Color oldColor= colorPlayer.Value;
+            Color newColor =coloresGuardados[Random.Range(0,coloresGuardados.Count)];
+            
+            coloresGuardados.Remove(newColor);
+            
+            if(!primeravez){
+                coloresGuardados.Add(oldColor);
+            }
+            colorPlayer.Value=newColor;
         }
+
+        // Position.OnvalueChanged += OnPosition Change
+    
+            // void OnPo Vector3 previousValue newValue { transform.position=Position.Value}
+            void Update()
+    {
+            enlace.material.color = colorPlayer.Value;
     }
+            
+    }
+    
 }
